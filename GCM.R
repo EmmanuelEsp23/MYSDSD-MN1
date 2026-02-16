@@ -29,7 +29,7 @@ while (!repetido) {
 
 # Limpiamos el vector de los ceros sobrantes
 resultado <- seeds[1:count]
-cat("Cantidad de números generados:", length(resultado), "\n")
+cat("\nCantidad de números generados:", length(resultado), "\n")
 
 if (length(resultado) == m) { #condicional de período de fiabilidad
   cat("El generador es de periodo completo\n")
@@ -41,5 +41,5 @@ if (length(resultado) == m) { #condicional de período de fiabilidad
 numeros <- resultado / m # Convertimos a números rectangulares 
 format <- format(round(numeros, 5), nsmall = 5) # Formateamos los números a 5 decimales
 df <- data.frame(NumeroRectangular = format) # Creamos un dataframe para guardar los números
-write.csv(df, file = paste0("datasetsGCM/", readline(prompt = "Nombre del archivo: "), ".csv"), row.names = FALSE) # Guardamos el dataframe en un CSV
+write.csv(df, file = paste0("datasetsGCM/", readline(prompt = "\nNombre del archivo: "), ".csv"), row.names = FALSE) # Guardamos el dataframe en un CSV
 cat("Archivo generado.\n")
