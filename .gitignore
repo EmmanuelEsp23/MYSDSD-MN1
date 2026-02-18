@@ -3,3 +3,6 @@ datasetsRNG/
 
 #ignora la carpeta datasetsGCM para el generador de números congruenciales mixtos
 datasetsGCM/
+
+#ignora la carpeta datasetsGCMult para el generador de números congruenciales lineales
+datasetsGCMult/
