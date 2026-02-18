@@ -7,7 +7,7 @@ seed <- as.numeric(readline(prompt = "Ingrese la semilla inicial X0: "))
 
 #Calcular el periodo esperado del generador (funciona como el modulo en el GCM)
 pe <- m / 4
-cat("Periodo esperado:", pe)
+cat("Periodo esperado: ", pe)
 
 seeds <- numeric(pe) #Esta madre se puede hacer con un array, pero con la función numeric es mejor
 #Definimos el periodo esperado como el tamaño tope porq así decía en la teoría
@@ -31,7 +31,7 @@ while (!repetido) {
 
 # Limpiamos el vector de los ceros sobrantes
 resultado <- seeds[1:count]
-cat("\nCantidad de números generados:", length(resultado), "\n")
+cat("\n", "\nCantidad de números generados:", length(resultado), "\n")
 
 if (length(resultado) == pe) { #condicional de período de fiabilidad
     cat("El generador es de periodo completo\n")
