@@ -1,11 +1,11 @@
 # ==============================================================================
-# PRUEBA DE KOLMOGOROV-SMIRNOV - NÚMEROS RECTANGULARES
+# PRUEBA DE KOLMOGOROV-SMIRNOV - NUMEROS RECTANGULARES
 # ==============================================================================
 
 rm(list = ls())
 
 cat("==========================================\n")
-cat("   PRUEBA DE KOLMOGOROV-SMIRNOV      \n")
+cat("   PRUEBA DE KOLMOGOROV-SMIRNOV (K-S)     \n")
 cat("==========================================\n\n")
 
 # ------------------------------------------------------------------------------
@@ -28,9 +28,8 @@ renglon_inicio <- as.integer(readline("Ingrese Renglón inicial: "))
 columna_nombre <- toupper(readline("Ingrese Columna (C1-C10): "))
 
 # ------------------------------------------------------------------------------
-# PASO 3: EXTRACCIÓN Y ORDENAMIENTO DE NÚMEROS
+# PASO 3: EXTRACCIÓN DE DATOS
 # ------------------------------------------------------------------------------
-
 numeros <- c()
 subset_tabla <- datos[datos$Renglon >= renglon_inicio, ]
 
@@ -43,58 +42,40 @@ if (length(numeros) < N) {
   stop("Error: No hay suficientes datos hacia abajo. Seleccione otro renglón.")
 }
 
-numeros_ord <- sort(numeros) # Ordenamos los números 
 cat("\nNúmeros seleccionados:\n")
-print(numeros_ord)
+print(numeros)
 
 # ------------------------------------------------------------------------------
-# PASO 4 Y 5: CALCULAR DISTANCIA ACUMULADA Y ESTADÍSTICO Dn
+# PASO 4: EJECUCIÓN DE LA PRUEBA DE KOLMOGOROV-SMIRNOV
 # ------------------------------------------------------------------------------
 
-# i representa la posición del número ordenado
-i <- 1:N
-F_xi <- i / N  # Paso 4: F(xi) = i/N
+# Comparamos la muestra contra la distribución Uniforme teórica U(0,1)
+ks_resultado <- ks.test(numeros, "punif", 0, 1)
+cat("Estadístico Dn calculado: ", ks_resultado$statistic, "\n")
 
-# Paso 5: Dn = max | F(xi) - xi |
-diferencias_absolutas <- abs(F_xi - numeros_ord) #Calculamos las diferencias y guardamos en un vector
-Dn_calculado <- max(diferencias_absolutas) #Obtenemos el máximo de las diferencias absolutas para obtener el estadístico Dn
-
-# ------------------------------------------------------------------------------
-# PASO 6: ESTADÍSTICO DE TABLAS (d_alpha,N)
-# ------------------------------------------------------------------------------
-# Proporcionamos el valor crítico basado en el alpha ingresado (para N > 35)
+Dn_calculado <- as.numeric(ks_resultado$statistic)
+p_valor <- ks_resultado$p.value
 alpha <- alpha_dato / 100
 
-if (N <= 35) {
-  cat("\n[!] Nota: Se recomienda ingresar d_alpha_N manualmente desde tabla física para N <= 35.\n")
-  d_tabla <- as.numeric(readline("Ingrese el valor de tabla (d_alpha,N): "))
-} else {
-  # Aproximación asintótica estándar
-  if (alpha == 0.05) d_tabla <- 1.36 / sqrt(N)
-  else if (alpha == 0.01) d_tabla <- 1.63 / sqrt(N)
-  else if (alpha == 0.10) d_tabla <- 1.22 / sqrt(N)
-  else d_tabla <- sqrt(-0.5 * log(alpha/2)) / sqrt(N)
-}
-
 # ------------------------------------------------------------------------------
-# PASO 7: COMPARACIÓN Y RESULTADO
+# PASO 5: RESULTADOS Y CRITERIO DE DECISIÓN
 # ------------------------------------------------------------------------------
 cat("\n==========================================\n")
 cat("              RESULTADOS K-S              \n")
 cat("==========================================\n")
 
+cat(sprintf("Estadístico Dn calculado: %.6f\n", Dn_calculado))
+cat(sprintf("Valor p (p-value):       %.6f\n", p_valor))
+cat(sprintf("Alpha de referencia:     %.4f\n", alpha))
 
-cat("\n------------------------------------------\n")
-cat(sprintf("Estadístico Dn calculado: %.4f\n", Dn_calculado))
-cat(sprintf("Estadístico d_tabla:      %.4f\n", d_tabla))
-
-cat("\nComparación:\n")
-cat(sprintf("¿ %.4f < %.4f ?\n", Dn_calculado, d_tabla))
+cat("\nCriterio de Decisión:\n")
+cat(sprintf("¿ p-valor (%.5f) > Dn calculado (%.5f) ?\n", p_valor, Dn_calculado))
 cat("------------------------------------------\n")
 
-if (Dn_calculado < d_tabla) {
-  cat("Resultado: NÚMEROS ACEPTADOS.\n")
+# En estadística profesional, si p-valor > alpha, NO se rechaza la uniformidad
+if (p_valor >  Dn_calculado) {
+  cat("Por lo tanto, los números son aceptados.\n")
 } else {
-  cat("Resultado: NÚMEROS NO ACEPTADOS.\n")
+  cat("Por lo tanto, los números no son aceptados.\n")
 }
 cat("==========================================\n")
