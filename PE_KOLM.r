@@ -27,6 +27,10 @@ N <- as.integer(readline("Ingrese cantidad de números (N): "))
 renglon_inicio <- as.integer(readline("Ingrese Renglón inicial: "))
 columna_nombre <- toupper(readline("Ingrese Columna (C1-C10): "))
 
+# ------------------------------------------------------------------------------
+# PASO 3: EXTRACCIÓN Y ORDENAMIENTO DE NÚMEROS
+# ------------------------------------------------------------------------------
+
 numeros <- c()
 subset_tabla <- datos[datos$Renglon >= renglon_inicio, ]
 
@@ -36,24 +40,24 @@ for (i in 1:nrow(subset_tabla)) {
 }
 
 if (length(numeros) < N) {
-  stop("Error: No hay suficientes datos para el tamaño de muestra solicitado.")
+  stop("Error: No hay suficientes datos hacia abajo. Seleccione otro renglón.")
 }
 
-# ------------------------------------------------------------------------------
-# PASO 3: ORDENAR EN FORMA ASCENDENTE
-# ------------------------------------------------------------------------------
-numeros_ord <- sort(numeros)
+numeros_ord <- sort(numeros) # Ordenamos los números 
+cat("\nNúmeros seleccionados:\n")
+print(numeros_ord)
 
 # ------------------------------------------------------------------------------
 # PASO 4 Y 5: CALCULAR DISTANCIA ACUMULADA Y ESTADÍSTICO Dn
 # ------------------------------------------------------------------------------
+
 # i representa la posición del número ordenado
 i <- 1:N
 F_xi <- i / N  # Paso 4: F(xi) = i/N
 
 # Paso 5: Dn = max | F(xi) - xi |
-diferencias_absolutas <- abs(F_xi - numeros_ord)
-Dn_calculado <- max(diferencias_absolutas)
+diferencias_absolutas <- abs(F_xi - numeros_ord) #Calculamos las diferencias y guardamos en un vector
+Dn_calculado <- max(diferencias_absolutas) #Obtenemos el máximo de las diferencias absolutas para obtener el estadístico Dn
 
 # ------------------------------------------------------------------------------
 # PASO 6: ESTADÍSTICO DE TABLAS (d_alpha,N)
@@ -79,20 +83,11 @@ cat("\n==========================================\n")
 cat("              RESULTADOS K-S              \n")
 cat("==========================================\n")
 
-# Mostramos tabla de los primeros 10 cálculos para verificación visual
-df_resultados <- data.frame(
-  i = i,
-  xi = numeros_ord,
-  F_xi = F_xi,
-  Abs_Diff = diferencias_absolutas
-)
-
-cat("Muestra de los cálculos (Primeros 10):\n")
-print(head(df_resultados, 10))
 
 cat("\n------------------------------------------\n")
 cat(sprintf("Estadístico Dn calculado: %.4f\n", Dn_calculado))
 cat(sprintf("Estadístico d_tabla:      %.4f\n", d_tabla))
+
 cat("\nComparación:\n")
 cat(sprintf("¿ %.4f < %.4f ?\n", Dn_calculado, d_tabla))
 cat("------------------------------------------\n")
