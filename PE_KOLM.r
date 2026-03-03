@@ -30,6 +30,7 @@ columna_nombre <- toupper(readline("Ingrese Columna (C1-C10): "))
 # ------------------------------------------------------------------------------
 # PASO 3: EXTRACCIÓN DE DATOS
 # ------------------------------------------------------------------------------
+
 numeros <- c()
 subset_tabla <- datos[datos$Renglon >= renglon_inicio, ]
 
